@@ -1,0 +1,527 @@
+08 February 2018
+
+mysql-js> \c root@localhost
+Creating a Session to 'root@localhost'
+Enter password: ****************
+Your MySQL connection id is 8
+Server version: 5.7.20-log MySQL Community Server (GPL)
+No default schema selected; type \use <schema> to set one.
+mysql-js> \sql
+Switching to SQL mode... Commands end with ;
+mysql-sql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| comp3421_pda       |
+| mysql              |
+| performance_schema |
+| sys                |
+| world              |
++--------------------+
+6 rows in set (0.19 sec)
+mysql-sql> use comp3421_pda
+       ... ;
+Query OK, 0 rows affected (0.12 sec)
+mysql-sql> show tables;
++------------------------+
+| Tables_in_comp3421_pda |
++------------------------+
+| accounts               |
+| banks                  |
+| collateral             |
+| customers              |
+| loans                  |
++------------------------+
+5 rows in set (0.10 sec)
+mysql-sql> alter table accounts drop primary key;
+Query OK, 0 rows affected (1.17 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table banks drop primary key;
+Query OK, 0 rows affected (0.88 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table collateral drop primary key;
+Query OK, 0 rows affected (0.89 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table loans drop primary key;
+Query OK, 0 rows affected (0.76 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table accounts add foreign key (customerid) references customers(customerid);
+Query OK, 0 rows affected (0.95 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table banks add foreign key (customerid) references customers(customerid);
+Query OK, 0 rows affected (2.89 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table collateral add foreign key (customerid) references customers(customerid);
+Query OK, 0 rows affected (0.77 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table loans add foreign key (customerid) references customers(customerid);
+Query OK, 0 rows affected (0.92 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe accounts;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| customerid    | int(11)       | NO   | MUL | null    |       |
+| accountnumber | int(11)       | YES  |     | null    |       |
+| balance       | decimal(15,2) | YES  |     | null    |       |
++---------------+---------------+------+-----+---------+-------+
+3 rows in set (0.15 sec)
+mysql-sql> describe banks;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| customerid  | int(11)     | NO   | MUL | null    |       |
+| bankname    | varchar(30) | YES  | UNI | null    |       |
+| address     | varchar(50) | YES  | UNI | null    |       |
+| phonenumber | varchar(15) | YES  | UNI | null    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+mysql-sql> describe collateral;
++------------------+--------------+------+-----+---------+-------+
+| Field            | Type         | Null | Key | Default | Extra |
++------------------+--------------+------+-----+---------+-------+
+| customerid       | int(11)      | NO   | MUL | null    |       |
+| property         | varchar(200) | YES  |     | null    |       |
+| naturalresources | varchar(200) | YES  |     | null    |       |
+| machinery        | varchar(200) | YES  |     | null    |       |
+| financialassets  | varchar(200) | YES  |     | null    |       |
++------------------+--------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+mysql-sql> describe loans;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| customerid      | int(11)       | NO   | MUL | null    |       |
+| loanid          | int(11)       | YES  | UNI | null    |       |
+| balance         | decimal(15,2) | NO   |     | null    |       |
+| loantype        | varchar(20)   | NO   |     | null    |       |
+| interestrate    | decimal(5,2)  | NO   |     | null    |       |
+| previouspayment | decimal(15,2) | YES  |     | null    |       |
+| nextpayment     | decimal(15,2) | YES  |     | null    |       |
+| nextpaymentdate | varchar(30)   | NO   |     | null    |       |
++-----------------+---------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+mysql-sql> describe customers;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| customerid  | int(11)      | NO   | PRI | null    | auto_increment |
+| firstname   | varchar(20)  | NO   |     | null    |                |
+| lastname    | varchar(20)  | NO   |     | null    |                |
+| email       | varchar(255) | YES  | UNI | null    |                |
+| phonenumber | varchar(15)  | YES  | UNI | null    |                |
+| address     | varchar(50)  | YES  |     | null    |                |
++-------------+--------------+------+-----+---------+----------------+
+6 rows in set (0.00 sec)
+mysql-sql> show create table loans;
++-------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table | Create Table                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
++-------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| loans | CREATE TABLE `loans` (
+  `customerid` int(11) NOT NULL,
+  `loanid` int(11) DEFAULT NULL,
+  `balance` decimal(15,2) NOT NULL,
+  `loantype` varchar(20) NOT NULL,
+  `interestrate` decimal(5,2) NOT NULL,
+  `previouspayment` decimal(15,2) DEFAULT NULL,
+  `nextpayment` decimal(15,2) DEFAULT NULL,
+  `nextpaymentdate` varchar(30) NOT NULL,
+  UNIQUE KEY `loanid` (`loanid`),
+  KEY `customerid` (`customerid`),
+  CONSTRAINT `loans_ibfk_1` FOREIGN KEY (`customerid`) REFERENCES `customers` (`customerid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
++-------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.13 sec)
+mysql-sql> alter table loans drop foreign key loans_ibfk_1;
+Query OK, 0 rows affected (0.09 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe loans;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| customerid      | int(11)       | NO   | MUL | null    |       |
+| loanid          | int(11)       | YES  | UNI | null    |       |
+| balance         | decimal(15,2) | NO   |     | null    |       |
+| loantype        | varchar(20)   | NO   |     | null    |       |
+| interestrate    | decimal(5,2)  | NO   |     | null    |       |
+| previouspayment | decimal(15,2) | YES  |     | null    |       |
+| nextpayment     | decimal(15,2) | YES  |     | null    |       |
+| nextpaymentdate | varchar(30)   | NO   |     | null    |       |
++-----------------+---------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+mysql-sql> alter table loans drop column customerid;
+Query OK, 0 rows affected (0.50 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe loans;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| loanid          | int(11)       | YES  | UNI | null    |       |
+| balance         | decimal(15,2) | NO   |     | null    |       |
+| loantype        | varchar(20)   | NO   |     | null    |       |
+| interestrate    | decimal(5,2)  | NO   |     | null    |       |
+| previouspayment | decimal(15,2) | YES  |     | null    |       |
+| nextpayment     | decimal(15,2) | YES  |     | null    |       |
+| nextpaymentdate | varchar(30)   | NO   |     | null    |       |
++-----------------+---------------+------+-----+---------+-------+
+7 rows in set (0.02 sec)
+mysql-sql> alter table loans drop index loanid;
+Query OK, 0 rows affected (0.22 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe loans;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| loanid          | int(11)       | YES  |     | null    |       |
+| balance         | decimal(15,2) | NO   |     | null    |       |
+| loantype        | varchar(20)   | NO   |     | null    |       |
+| interestrate    | decimal(5,2)  | NO   |     | null    |       |
+| previouspayment | decimal(15,2) | YES  |     | null    |       |
+| nextpayment     | decimal(15,2) | YES  |     | null    |       |
+| nextpaymentdate | varchar(30)   | NO   |     | null    |       |
++-----------------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+mysql-sql> alter table loans add primary key (loanid);
+Query OK, 0 rows affected (0.53 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe loans;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| loanid          | int(11)       | NO   | PRI | null    |       |
+| balance         | decimal(15,2) | NO   |     | null    |       |
+| loantype        | varchar(20)   | NO   |     | null    |       |
+| interestrate    | decimal(5,2)  | NO   |     | null    |       |
+| previouspayment | decimal(15,2) | YES  |     | null    |       |
+| nextpayment     | decimal(15,2) | YES  |     | null    |       |
+| nextpaymentdate | varchar(30)   | NO   |     | null    |       |
++-----------------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+mysql-sql> create table ispaying (customerid int not null, loanid int not null, foreign key (customerid) references customers(customerid), foreign key (loanid) references loans(loanid));
+Query OK, 0 rows affected (0.37 sec)
+mysql-sql> describe ispaying;
++------------+---------+------+-----+---------+-------+
+| Field      | Type    | Null | Key | Default | Extra |
++------------+---------+------+-----+---------+-------+
+| customerid | int(11) | NO   | MUL | null    |       |
+| loanid     | int(11) | NO   | MUL | null    |       |
++------------+---------+------+-----+---------+-------+
+2 rows in set (0.10 sec)
+
+
+09 February 2018
+
+
+mysql-js> \c root@localhost
+Creating a Session to 'root@localhost'
+Enter password: ****************
+Your MySQL connection id is 9
+Server version: 5.7.20-log MySQL Community Server (GPL)
+No default schema selected; type \use <schema> to set one.
+mysql-js> \sql
+Switching to SQL mode... Commands end with ;
+mysql-sql> use comp3421_pda
+       ... ;
+Query OK, 0 rows affected (0.00 sec)
+mysql-sql> load data local infile 'C:\Users\Zache\Desktop\data-customers.csv' into table customers
+       ... fields terminated by ','
+       ... lines terminated by '\n'
+       ... ;
+ERROR: 2 (HY000): File 'C:UsersacheDesktopdata-customers.csv' not found (Errcode: 2 - No such file or directory)
+mysql-sql> load data local infile 'C:/Users/Zache/Desktop/data-customers.csv' into table customers
+       ... fields terminated by ','
+       ... lines terminated by '\n'
+       ... ;
+Query OK, 2995 rows affected (1.09 sec)
+
+Records: 2995  Deleted: 0  Skipped: 0  Warnings: 0
+mysql-sql> load data local infile 'C:/Users/Zache/Desktop/data-loans.csv' into table loans
+       ... fields terminated by ','
+       ... lines terminated by '\n'
+       ... ;
+Query OK, 1000 rows affected (0.30 sec)
+
+Records: 1000  Deleted: 0  Skipped: 0  Warnings: 0
+mysql-sql> load data local infile 'C:/Users/Zache/Desktop/data-is-paying.csv' into table ispaying
+       ... fields terminated by ','
+       ... lines terminated by '\n'
+       ... ;
+Query OK, 30000 rows affected (2.79 sec)
+
+Records: 30000  Deleted: 0  Skipped: 0  Warnings: 0
+mysql-sql> alter table banks drop index bankname;
+Query OK, 0 rows affected (0.32 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table banks drop index address;
+Query OK, 0 rows affected (0.28 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table banks drop index phonenumber;
+Query OK, 0 rows affected (0.25 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe banks;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| customerid  | int(11)     | NO   | MUL | null    |       |
+| bankname    | varchar(30) | YES  |     | null    |       |
+| address     | varchar(50) | YES  |     | null    |       |
+| phonenumber | varchar(15) | YES  |     | null    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.11 sec)
+mysql-sql> alter table collateral drop financialassets;
+Query OK, 0 rows affected (0.64 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe collateral
+       ... ;
++------------------+--------------+------+-----+---------+-------+
+| Field            | Type         | Null | Key | Default | Extra |
++------------------+--------------+------+-----+---------+-------+
+| customerid       | int(11)      | NO   | MUL | null    |       |
+| property         | varchar(200) | YES  |     | null    |       |
+| naturalresources | varchar(200) | YES  |     | null    |       |
+| machinery        | varchar(200) | YES  |     | null    |       |
++------------------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+mysql-sql> load data local infile 'C:/Users/Zache/Desktop/data-accounts.csv' into table accounts
+       ... fields terminated by ','
+       ... lines terminated by '\n'
+       ... ;
+Query OK, 6000 rows affected (1.02 sec)
+
+Records: 6000  Deleted: 0  Skipped: 0  Warnings: 0
+mysql-sql> load data local infile 'C:/Users/Zache/Desktop/data-banks.csv' into table banks
+       ... fields terminated by ','
+       ... lines terminated by '\n'
+       ... ;
+Query OK, 6000 rows affected (1.61 sec)
+
+Records: 6000  Deleted: 0  Skipped: 0  Warnings: 0
+mysql-sql> load data local infile 'C:/Users/Zache/Desktop/data-collateral.csv' into table collateral
+       ... fields terminated by ','
+       ... lines terminated by '\n'
+       ... ;
+Query OK, 6000 rows affected (1.56 sec)
+
+Records: 6000  Deleted: 0  Skipped: 0  Warnings: 0
+mysql-sql> show tables;
++------------------------+
+| Tables_in_comp3421_pda |
++------------------------+
+| accounts               |
+| banks                  |
+| collateral             |
+| customers              |
+| ispaying               |
+| loans                  |
++------------------------+
+6 rows in set (0.13 sec)
+mysql-sql> describe accounts
+       ... describe banks
+       ... describe collateral
+       ... describe customers
+       ... describe ispaying
+       ... describe loans;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'describe banks
+describe collateral
+describe customers
+describe ispaying
+describe' at line 2
+mysql-sql> describe accounts;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| customerid    | int(11)       | NO   | MUL | null    |       |
+| accountnumber | int(11)       | YES  |     | null    |       |
+| balance       | decimal(15,2) | YES  |     | null    |       |
++---------------+---------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+mysql-sql> describe banks;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| customerid  | int(11)     | NO   | MUL | null    |       |
+| bankname    | varchar(30) | YES  |     | null    |       |
+| address     | varchar(50) | YES  |     | null    |       |
+| phonenumber | varchar(15) | YES  |     | null    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+mysql-sql> describe collateral;
++------------------+--------------+------+-----+---------+-------+
+| Field            | Type         | Null | Key | Default | Extra |
++------------------+--------------+------+-----+---------+-------+
+| customerid       | int(11)      | NO   | MUL | null    |       |
+| property         | varchar(200) | YES  |     | null    |       |
+| naturalresources | varchar(200) | YES  |     | null    |       |
+| machinery        | varchar(200) | YES  |     | null    |       |
++------------------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+mysql-sql> describe customers;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| customerid  | int(11)      | NO   | PRI | null    | auto_increment |
+| firstname   | varchar(20)  | NO   |     | null    |                |
+| lastname    | varchar(20)  | NO   |     | null    |                |
+| email       | varchar(255) | YES  | UNI | null    |                |
+| phonenumber | varchar(15)  | YES  | UNI | null    |                |
+| address     | varchar(50)  | YES  |     | null    |                |
++-------------+--------------+------+-----+---------+----------------+
+6 rows in set (0.00 sec)
+mysql-sql> describe ispaying;
++------------+---------+------+-----+---------+-------+
+| Field      | Type    | Null | Key | Default | Extra |
++------------+---------+------+-----+---------+-------+
+| customerid | int(11) | NO   | MUL | null    |       |
+| loanid     | int(11) | NO   | MUL | null    |       |
++------------+---------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+mysql-sql> describe loans;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| loanid          | int(11)       | NO   | PRI | null    |       |
+| balance         | decimal(15,2) | NO   |     | null    |       |
+| loantype        | varchar(20)   | NO   |     | null    |       |
+| interestrate    | decimal(5,2)  | NO   |     | null    |       |
+| previouspayment | decimal(15,2) | YES  |     | null    |       |
+| nextpayment     | decimal(15,2) | YES  |     | null    |       |
+| nextpaymentdate | varchar(30)   | NO   |     | null    |       |
++-----------------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+mysql-sql> select count(*) from accounts;
++----------+
+| count(*) |
++----------+
+|     6000 |
++----------+
+1 row in set (0.14 sec)
+mysql-sql> select count(*) from banks;
++----------+
+| count(*) |
++----------+
+|     6000 |
++----------+
+1 row in set (0.00 sec)
+mysql-sql> select count(*) from collateral;
++----------+
+| count(*) |
++----------+
+|     6000 |
++----------+
+1 row in set (0.00 sec)
+mysql-sql> select count(*) from loans;
++----------+
+| count(*) |
++----------+
+|     1000 |
++----------+
+1 row in set (0.14 sec)
+mysql-sql> select count(*) from customers;
++----------+
+| count(*) |
++----------+
+|     3000 |
++----------+
+1 row in set (0.13 sec)
+mysql-sql> select count(*) from ispaying;
++----------+
+| count(*) |
++----------+
+|    30000 |
++----------+
+1 row in set (0.36 sec)
+mysql-sql> select * from accounts where customerid = 1;
++------------+---------------+------------+
+| customerid | accountnumber | balance    |
++------------+---------------+------------+
+|          1 |          5455 | 5236379.00 |
++------------+---------------+------------+
+1 row in set (0.16 sec)
+mysql-sql> select * from banks where customerid = 690;
++------------+----------+----------------------------------------------+-------------+
+| customerid | bankname | address                                      | phonenumber |
++------------+----------+----------------------------------------------+-------------+
+|        690 | US Bank  | 634 Money Making Blvd Breckenridge CO 80250  | 621937922   |
+|        690 | US Bank  | 4626 Money Making Blvd Breckenridge CO 80250 | 494798777   |
++------------+----------+----------------------------------------------+-------------+
+2 rows in set (0.00 sec)
+mysql-sql> select * from collateral where customerid < 3;
++------------+-------------------------------------------------+------------------+-------------------------------+
+| customerid | property                                        | naturalresources | machinery                     |
++------------+-------------------------------------------------+------------------+-------------------------------+
+|          1 | 3797 Investment Property Ave Manhattan NY 35201 | Natural Gas      | Microprocessor plant in China |
+|          2 | 2539 Investment Property Ave Manhattan NY 35201 | Natural Gas      | Microprocessor plant in China |
+|          2 | 4375 Investment Property Ave Manhattan NY 35201 | Natural Gas      | Microprocessor plant in China |
++------------+-------------------------------------------------+------------------+-------------------------------+
+3 rows in set (0.00 sec)
+mysql-sql> select * from customers where customerid < 10;
++------------+-----------+------------+------------------------+-------------+-------------------------------------+
+| customerid | firstname | lastname   | email                  | phonenumber | address                             |
++------------+-----------+------------+------------------------+-------------+-------------------------------------+
+|          1 | Zachery   | Nyman      | Zachery.nyman@du.edu   | 5132121915  | 2581 S High St Denver, CO 80210     |
+|          2 | Courtney  | Owen       | Courtney.owen@du.edu   | 1234567890  | 2581 S High St Denver, CO 80210     |
+|          3 | Tom       | Marks      | Tom.marks@du.edu       | 1234567891  | 8923 N Main St Denver, CO 80210     |
+|          4 | Drew      | Harrilchak | Drew.Harrilchak@du.edu | 1234567892  | 8944 W Jewell St Denver, CO 80210   |
+|          5 | Brian     | Norris     | Brian.Norris@du.edu    | 1234567893  | 4251 W Iliff St Denver, CO 80210    |
+|          6 | Jenny6    | Davis6     | Jenny6.Davis6@du.edu   | 279706364   | 6 Hunkey Dorey Ln Keystone CO 80210 |
+|          7 | Jenny7    | Davis7     | Jenny7.Davis7@du.edu   | 181418709   | 7 Hunkey Dorey Ln Keystone CO 80210 |
+|          8 | Jenny8    | Davis8     | Jenny8.Davis8@du.edu   | 478036706   | 8 Hunkey Dorey Ln Keystone CO 80210 |
+|          9 | Jenny9    | Davis9     | Jenny9.Davis9@du.edu   | 979564550   | 9 Hunkey Dorey Ln Keystone CO 80210 |
++------------+-----------+------------+------------------------+-------------+-------------------------------------+
+9 rows in set (0.00 sec)
+mysql-sql> select * from ispaying where customerid < 3;
++------------+--------+
+| customerid | loanid |
++------------+--------+
+|          1 |    978 |
+|          1 |    417 |
+|          1 |    265 |
+|          1 |    988 |
+|          1 |    878 |
+|          1 |    640 |
+|          1 |    206 |
+|          1 |    418 |
+|          1 |    474 |
+|          2 |    279 |
+|          2 |    491 |
+|          2 |    440 |
+|          2 |    461 |
+|          2 |    527 |
+|          2 |    165 |
+|          2 |    367 |
+|          2 |    826 |
+|          2 |    931 |
++------------+--------+
+18 rows in set (0.00 sec)
+mysql-sql> select * from loans where loanid < 10;
++--------+------------+-----------------+--------------+-----------------+-------------+-----------------+
+| loanid | balance    | loantype        | interestrate | previouspayment | nextpayment | nextpaymentdate |
++--------+------------+-----------------+--------------+-----------------+-------------+-----------------+
+|      1 | 3617582.00 | Investment Loan |         4.00 |        39710.00 |    12379.00 | 3/15/2018       |
+|      2 | 3912347.00 | Investment Loan |         8.00 |        45553.00 |    46861.00 | 2/7/2018        |
+|      3 | 5406383.00 | Investment Loan |         7.00 |        37204.00 |    48364.00 | 10/24/2018      |
+|      4 | 1244242.00 | Investment Loan |        12.00 |        12406.00 |    21149.00 | 3/28/2018       |
+|      5 |  784708.00 | Investment Loan |        12.00 |         2293.00 |    50309.00 | 9/19/2018       |
+|      6 | 5229660.00 | Investment Loan |         8.00 |        49915.00 |    16429.00 | 5/13/2018       |
+|      7 | 4549227.00 | Investment Loan |         4.00 |        32292.00 |    30487.00 | 8/20/2018       |
+|      8 | 2610169.00 | Investment Loan |         4.00 |        24543.00 |    44661.00 | 8/28/2018       |
+|      9 | 4361631.00 | Investment Loan |         6.00 |         8671.00 |    37487.00 | 11/13/2018      |
++--------+------------+-----------------+--------------+-----------------+-------------+-----------------+
+9 rows in set (0.00 sec)

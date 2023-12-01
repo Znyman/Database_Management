@@ -1,0 +1,595 @@
+January 22, 2018
+
+mysql-sql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| world              |
++--------------------+
+5 rows in set (0.00 sec)
+mysql-sql> create database comp3421_PDA;
+Query OK, 1 row affected (0.01 sec)
+mysql-sql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| comp3421_pda       |
+| mysql              |
+| performance_schema |
+| sys                |
+| world              |
++--------------------+
+6 rows in set (0.00 sec)
+mysql-sql> use comp3421_pda;
+Query OK, 0 rows affected (0.00 sec)
+mysql-sql> show tables;
+Empty set (0.00 sec)
+mysql-sql> create table customers(customerid int not null primary key, firstname varchar(20) not null, lastname varchar(20) not null, email varchar(255), phonenumber varchar(15), address varchar(50));
+Query OK, 0 rows affected (0.26 sec)
+mysql-sql> show tables;
++------------------------+
+| Tables_in_comp3421_pda |
++------------------------+
+| customers              |
++------------------------+
+1 row in set (0.00 sec)
+mysql-sql> describe tables;
+ERROR: 1146 (42S02): Table 'comp3421_pda.tables' doesn't exist
+mysql-sql> describe customers;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| customerid  | int(11)      | NO   | PRI | null    |       |
+| firstname   | varchar(20)  | NO   |     | null    |       |
+| lastname    | varchar(20)  | NO   |     | null    |       |
+| email       | varchar(255) | YES  |     | null    |       |
+| phonenumber | varchar(15)  | YES  |     | null    |       |
+| address     | varchar(50)  | YES  |     | null    |       |
++-------------+--------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+mysql-sql> alter table customers add unique(email, phonenumber, address);
+Query OK, 0 rows affected (0.36 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe customers;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| customerid  | int(11)      | NO   | PRI | null    |       |
+| firstname   | varchar(20)  | NO   |     | null    |       |
+| lastname    | varchar(20)  | NO   |     | null    |       |
+| email       | varchar(255) | YES  | MUL | null    |       |
+| phonenumber | varchar(15)  | YES  |     | null    |       |
+| address     | varchar(50)  | YES  |     | null    |       |
++-------------+--------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+mysql-sql> alter table customers drop index email;
+Query OK, 0 rows affected (0.30 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe customers;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| customerid  | int(11)      | NO   | PRI | null    |       |
+| firstname   | varchar(20)  | NO   |     | null    |       |
+| lastname    | varchar(20)  | NO   |     | null    |       |
+| email       | varchar(255) | YES  |     | null    |       |
+| phonenumber | varchar(15)  | YES  |     | null    |       |
+| address     | varchar(50)  | YES  |     | null    |       |
++-------------+--------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+mysql-sql> alter table customers add unique(email);
+Query OK, 0 rows affected (0.31 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe customers;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| customerid  | int(11)      | NO   | PRI | null    |       |
+| firstname   | varchar(20)  | NO   |     | null    |       |
+| lastname    | varchar(20)  | NO   |     | null    |       |
+| email       | varchar(255) | YES  | UNI | null    |       |
+| phonenumber | varchar(15)  | YES  |     | null    |       |
+| address     | varchar(50)  | YES  |     | null    |       |
++-------------+--------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+mysql-sql> alter table customers add unique(phonenumber);
+Query OK, 0 rows affected (0.30 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe customers;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| customerid  | int(11)      | NO   | PRI | null    |       |
+| firstname   | varchar(20)  | NO   |     | null    |       |
+| lastname    | varchar(20)  | NO   |     | null    |       |
+| email       | varchar(255) | YES  | UNI | null    |       |
+| phonenumber | varchar(15)  | YES  | UNI | null    |       |
+| address     | varchar(50)  | YES  |     | null    |       |
++-------------+--------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+mysql-sql> alter table customers add unique(address);
+Query OK, 0 rows affected (0.37 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe customers;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| customerid  | int(11)      | NO   | PRI | null    |       |
+| firstname   | varchar(20)  | NO   |     | null    |       |
+| lastname    | varchar(20)  | NO   |     | null    |       |
+| email       | varchar(255) | YES  | UNI | null    |       |
+| phonenumber | varchar(15)  | YES  | UNI | null    |       |
+| address     | varchar(50)  | YES  | UNI | null    |       |
++-------------+--------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+mysql-sql> create table collateral(property varchar(200), naturalresources varchar(200), machinery varchar(200), financialassets(200));
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(200))' at line 1
+mysql-sql> create table collateral(property varchar(200), naturalresources varchar(200), machinery varchar(200), financialassets varchar(200));
+Query OK, 0 rows affected (0.37 sec)
+mysql-sql> describe collateral
+       ... ;
++------------------+--------------+------+-----+---------+-------+
+| Field            | Type         | Null | Key | Default | Extra |
++------------------+--------------+------+-----+---------+-------+
+| property         | varchar(200) | YES  |     | null    |       |
+| naturalresources | varchar(200) | YES  |     | null    |       |
+| machinery        | varchar(200) | YES  |     | null    |       |
+| financialassets  | varchar(200) | YES  |     | null    |       |
++------------------+--------------+------+-----+---------+-------+
+4 rows in set (0.02 sec)
+mysql-sql> create table loans(loanid int primary key not null, balance decimal(15,2) not null, loantype varchar(20) not null, interest-rate decimal(5, 2) not null check (interest-rate > 0 and interest-rate <= 100), previouspayment decimal(15,2), nextpayment decimal(15,2), nextpaymentdate varchar(30) not null);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-rate decimal(5, 2) not null check (interest-rate > 0 and interest-rate <= 100),' at line 1
+mysql-sql> create table loans(loanid int primary key not null, balance decimal(15,2) not null, loantype varchar(20) not null, interestrate decimal(5, 2) not null check (interestrate > 0 and interestrate <= 100), previouspayment decimal(15,2), nextpayment decimal(15,2), nextpaymentdate varchar(30) not null);
+Query OK, 0 rows affected (0.69 sec)
+mysql-sql> describe loans;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| loanid          | int(11)       | NO   | PRI | null    |       |
+| balance         | decimal(15,2) | NO   |     | null    |       |
+| loantype        | varchar(20)   | NO   |     | null    |       |
+| interestrate    | decimal(5,2)  | NO   |     | null    |       |
+| previouspayment | decimal(15,2) | YES  |     | null    |       |
+| nextpayment     | decimal(15,2) | YES  |     | null    |       |
+| nextpaymentdate | varchar(30)   | NO   |     | null    |       |
++-----------------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+mysql-sql> create table banks(bankname varchar(30) primary key, address varchar(50) unique, phonenumber varchar(15) unique);
+Query OK, 0 rows affected (0.49 sec)
+mysql-sql> describe banks;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| bankname    | varchar(30) | NO   | PRI | null    |       |
+| address     | varchar(50) | YES  | UNI | null    |       |
+| phonenumber | varchar(15) | YES  | UNI | null    |       |
++-------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+mysql-sql> create table accounts(accountnumber int primary key, balance decimal(15,2));
+Query OK, 0 rows affected (0.33 sec)
+mysql-sql> describe accounts;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| accountnumber | int(11)       | NO   | PRI | null    |       |
+| balance       | decimal(15,2) | YES  |     | null    |       |
++---------------+---------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+mysql-sql> describe customers;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| customerid  | int(11)      | NO   | PRI | null    |       |
+| firstname   | varchar(20)  | NO   |     | null    |       |
+| lastname    | varchar(20)  | NO   |     | null    |       |
+| email       | varchar(255) | YES  | UNI | null    |       |
+| phonenumber | varchar(15)  | YES  | UNI | null    |       |
+| address     | varchar(50)  | YES  | UNI | null    |       |
++-------------+--------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+mysql-sql> insert into customers values("1", "Zachery", "Nyman", "Zachery.nyman@du.edu", "5132121915", "2581 S High St Denver, CO 80210");
+Query OK, 1 row affected (0.20 sec)
+mysql-sql> insert into customers values("2", "Courtney", "Owen", "Courtney.owen@du.edu", "1234567890", "2581 S High St Denver, CO 80210");
+ERROR: 1062 (23000): Duplicate entry '2581 S High St Denver, CO 80210' for key 'address'
+mysql-sql> alter table customers drop index address;
+Query OK, 0 rows affected (0.28 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe customers;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| customerid  | int(11)      | NO   | PRI | null    |       |
+| firstname   | varchar(20)  | NO   |     | null    |       |
+| lastname    | varchar(20)  | NO   |     | null    |       |
+| email       | varchar(255) | YES  | UNI | null    |       |
+| phonenumber | varchar(15)  | YES  | UNI | null    |       |
+| address     | varchar(50)  | YES  |     | null    |       |
++-------------+--------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+mysql-sql> insert into customers values("2", "Courtney", "Owen", "Courtney.owen@du.edu", "1234567890", "2581 S High St Denver, CO 80210");
+Query OK, 1 row affected (0.15 sec)
+mysql-sql> insert into customers values("3", "Tom", "Marks", "Tom.marks@du.edu", "1234567891", "8923 N Main St Denver, CO 80210");
+Query OK, 1 row affected (0.41 sec)
+mysql-sql> insert into customers values("4", "Drew", "Harrilchak", "Drew.Harrilchak@du.edu", "1234567892", "8944 W Jewell St Denver, CO 80210");
+Query OK, 1 row affected (0.38 sec)
+mysql-sql> insert into customers values("5", "Brian", "Norris", "Brian.Norris@du.edu", "1234567893", "4251 W Iliff St Denver, CO 80210");
+Query OK, 1 row affected (0.16 sec)
+mysql-sql> select * from customers;
++------------+-----------+------------+------------------------+-------------+-----------------------------------+
+| customerid | firstname | lastname   | email                  | phonenumber | address                           |
++------------+-----------+------------+------------------------+-------------+-----------------------------------+
+|          1 | Zachery   | Nyman      | Zachery.nyman@du.edu   | 5132121915  | 2581 S High St Denver, CO 80210   |
+|          2 | Courtney  | Owen       | Courtney.owen@du.edu   | 1234567890  | 2581 S High St Denver, CO 80210   |
+|          3 | Tom       | Marks      | Tom.marks@du.edu       | 1234567891  | 8923 N Main St Denver, CO 80210   |
+|          4 | Drew      | Harrilchak | Drew.Harrilchak@du.edu | 1234567892  | 8944 W Jewell St Denver, CO 80210 |
+|          5 | Brian     | Norris     | Brian.Norris@du.edu    | 1234567893  | 4251 W Iliff St Denver, CO 80210  |
++------------+-----------+------------+------------------------+-------------+-----------------------------------+
+5 rows in set (0.12 sec)
+
+
+January 23, 2018
+
+
+mysql-sql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| comp3421_pda       |
+| mysql              |
+| performance_schema |
+| sys                |
+| world              |
++--------------------+
+6 rows in set (0.00 sec)
+mysql-sql> use comp3421_pda;
+Query OK, 0 rows affected (0.00 sec)
+mysql-sql> show tables;
++------------------------+
+| Tables_in_comp3421_pda |
++------------------------+
+| accounts               |
+| banks                  |
+| collateral             |
+| customers              |
+| loans                  |
++------------------------+
+5 rows in set (0.00 sec)
+mysql-sql> describe loans;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| loanid          | int(11)       | NO   | PRI | null    |       |
+| balance         | decimal(15,2) | NO   |     | null    |       |
+| loantype        | varchar(20)   | NO   |     | null    |       |
+| interestrate    | decimal(5,2)  | NO   |     | null    |       |
+| previouspayment | decimal(15,2) | YES  |     | null    |       |
+| nextpayment     | decimal(15,2) | YES  |     | null    |       |
+| nextpaymentdate | varchar(30)   | NO   |     | null    |       |
++-----------------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+mysql-sql> describe customers;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| customerid  | int(11)      | NO   | PRI | null    |       |
+| firstname   | varchar(20)  | NO   |     | null    |       |
+| lastname    | varchar(20)  | NO   |     | null    |       |
+| email       | varchar(255) | YES  | UNI | null    |       |
+| phonenumber | varchar(15)  | YES  | UNI | null    |       |
+| address     | varchar(50)  | YES  |     | null    |       |
++-------------+--------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+mysql-sql> alter table loans drop primary key;
+Query OK, 0 rows affected (0.80 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe loans;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| loanid          | int(11)       | NO   |     | null    |       |
+| balance         | decimal(15,2) | NO   |     | null    |       |
+| loantype        | varchar(20)   | NO   |     | null    |       |
+| interestrate    | decimal(5,2)  | NO   |     | null    |       |
+| previouspayment | decimal(15,2) | YES  |     | null    |       |
+| nextpayment     | decimal(15,2) | YES  |     | null    |       |
+| nextpaymentdate | varchar(30)   | NO   |     | null    |       |
++-----------------+---------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+mysql-sql> alter table loans add customerid int not null primary key;
+Query OK, 0 rows affected (0.60 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe loans;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| loanid          | int(11)       | NO   |     | null    |       |
+| balance         | decimal(15,2) | NO   |     | null    |       |
+| loantype        | varchar(20)   | NO   |     | null    |       |
+| interestrate    | decimal(5,2)  | NO   |     | null    |       |
+| previouspayment | decimal(15,2) | YES  |     | null    |       |
+| nextpayment     | decimal(15,2) | YES  |     | null    |       |
+| nextpaymentdate | varchar(30)   | NO   |     | null    |       |
+| customerid      | int(11)       | NO   | PRI | null    |       |
++-----------------+---------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+mysql-sql> alter table loans modify column customerid int(11) after loanid;
+Query OK, 0 rows affected (0.53 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe loans;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| loanid          | int(11)       | NO   |     | null    |       |
+| customerid      | int(11)       | NO   | PRI | null    |       |
+| balance         | decimal(15,2) | NO   |     | null    |       |
+| loantype        | varchar(20)   | NO   |     | null    |       |
+| interestrate    | decimal(5,2)  | NO   |     | null    |       |
+| previouspayment | decimal(15,2) | YES  |     | null    |       |
+| nextpayment     | decimal(15,2) | YES  |     | null    |       |
+| nextpaymentdate | varchar(30)   | NO   |     | null    |       |
++-----------------+---------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+mysql-sql> alter table loans modify column loanid int(11) after customerid;
+Query OK, 0 rows affected (0.48 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe loans;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| customerid      | int(11)       | NO   | PRI | null    |       |
+| loanid          | int(11)       | YES  |     | null    |       |
+| balance         | decimal(15,2) | NO   |     | null    |       |
+| loantype        | varchar(20)   | NO   |     | null    |       |
+| interestrate    | decimal(5,2)  | NO   |     | null    |       |
+| previouspayment | decimal(15,2) | YES  |     | null    |       |
+| nextpayment     | decimal(15,2) | YES  |     | null    |       |
+| nextpaymentdate | varchar(30)   | NO   |     | null    |       |
++-----------------+---------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+mysql-sql> describe collateral;
++------------------+--------------+------+-----+---------+-------+
+| Field            | Type         | Null | Key | Default | Extra |
++------------------+--------------+------+-----+---------+-------+
+| property         | varchar(200) | YES  |     | null    |       |
+| naturalresources | varchar(200) | YES  |     | null    |       |
+| machinery        | varchar(200) | YES  |     | null    |       |
+| financialassets  | varchar(200) | YES  |     | null    |       |
++------------------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+mysql-sql> alter table customers modify column customerid int auto_increment;
+Query OK, 5 rows affected (0.87 sec)
+
+Records: 5  Duplicates: 0  Warnings: 0
+mysql-sql> describe customers;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| customerid  | int(11)      | NO   | PRI | null    | auto_increment |
+| firstname   | varchar(20)  | NO   |     | null    |                |
+| lastname    | varchar(20)  | NO   |     | null    |                |
+| email       | varchar(255) | YES  | UNI | null    |                |
+| phonenumber | varchar(15)  | YES  | UNI | null    |                |
+| address     | varchar(50)  | YES  |     | null    |                |
++-------------+--------------+------+-----+---------+----------------+
+6 rows in set (0.00 sec)
+
+mysql-sql> alter table collateral add customerid int not null primary key;
+Query OK, 0 rows affected (0.60 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table collateral modify column customerid int(11) after property;
+Query OK, 0 rows affected (0.54 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table collateral modify column property varchar(200) after customerid;
+Query OK, 0 rows affected (1.02 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe collateral;
++------------------+--------------+------+-----+---------+-------+
+| Field            | Type         | Null | Key | Default | Extra |
++------------------+--------------+------+-----+---------+-------+
+| customerid       | int(11)      | NO   | PRI | null    |       |
+| property         | varchar(200) | YES  |     | null    |       |
+| naturalresources | varchar(200) | YES  |     | null    |       |
+| machinery        | varchar(200) | YES  |     | null    |       |
+| financialassets  | varchar(200) | YES  |     | null    |       |
++------------------+--------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+mysql-sql> describe banks;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| bankname    | varchar(30) | NO   | PRI | null    |       |
+| address     | varchar(50) | YES  | UNI | null    |       |
+| phonenumber | varchar(15) | YES  | UNI | null    |       |
++-------------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+mysql-sql> alter table banks add customerid int not null primary key;
+ERROR: 1068 (42000): Multiple primary key defined
+mysql-sql> alter table banks drop primary key;
+Query OK, 0 rows affected (0.72 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table banks add unique (bankname);
+Query OK, 0 rows affected (0.61 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe banks;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| bankname    | varchar(30) | NO   | PRI | null    |       |
+| address     | varchar(50) | YES  | UNI | null    |       |
+| phonenumber | varchar(15) | YES  | UNI | null    |       |
++-------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+mysql-sql> alter table banks drop primary key;
+ERROR: 1091 (42000): Can't DROP 'PRIMARY'; check that column/key exists
+mysql-sql> alter table banks add customerid int not null primary key;
+Query OK, 0 rows affected (0.64 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe banks;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| bankname    | varchar(30) | NO   | UNI | null    |       |
+| address     | varchar(50) | YES  | UNI | null    |       |
+| phonenumber | varchar(15) | YES  | UNI | null    |       |
+| customerid  | int(11)     | NO   | PRI | null    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+mysql-sql> alter table banks modify column customerid int(11) after bankname;
+Query OK, 0 rows affected (0.59 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe banks;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| bankname    | varchar(30) | NO   | UNI | null    |       |
+| customerid  | int(11)     | NO   | PRI | null    |       |
+| address     | varchar(50) | YES  | UNI | null    |       |
+| phonenumber | varchar(15) | YES  | UNI | null    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+mysql-sql> alter table banks modify column bankname varchar(30) after customerid;
+Query OK, 0 rows affected (0.54 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe banks;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| customerid  | int(11)     | NO   | PRI | null    |       |
+| bankname    | varchar(30) | YES  | UNI | null    |       |
+| address     | varchar(50) | YES  | UNI | null    |       |
+| phonenumber | varchar(15) | YES  | UNI | null    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+mysql-sql> describe accounts;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| accountnumber | int(11)       | NO   | PRI | null    |       |
+| balance       | decimal(15,2) | YES  |     | null    |       |
++---------------+---------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+mysql-sql> alter table accounts drop primary key;
+Query OK, 0 rows affected (0.72 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table accounts add customerid int not null primary key;
+Query OK, 0 rows affected (0.52 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table accounts modify column customerid int(11) after accountnumber;
+Query OK, 0 rows affected (0.52 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> alter table accounts modify column accountnumber int(11) after customerid;
+Query OK, 0 rows affected (0.50 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe accounts;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| customerid    | int(11)       | NO   | PRI | null    |       |
+| accountnumber | int(11)       | YES  |     | null    |       |
+| balance       | decimal(15,2) | YES  |     | null    |       |
++---------------+---------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+mysql-sql> describe banks;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| customerid  | int(11)     | NO   | PRI | null    |       |
+| bankname    | varchar(30) | YES  | UNI | null    |       |
+| address     | varchar(50) | YES  | UNI | null    |       |
+| phonenumber | varchar(15) | YES  | UNI | null    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+mysql-sql> describe collateral;
++------------------+--------------+------+-----+---------+-------+
+| Field            | Type         | Null | Key | Default | Extra |
++------------------+--------------+------+-----+---------+-------+
+| customerid       | int(11)      | NO   | PRI | null    |       |
+| property         | varchar(200) | YES  |     | null    |       |
+| naturalresources | varchar(200) | YES  |     | null    |       |
+| machinery        | varchar(200) | YES  |     | null    |       |
+| financialassets  | varchar(200) | YES  |     | null    |       |
++------------------+--------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+mysql-sql> describe customers;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| customerid  | int(11)      | NO   | PRI | null    | auto_increment |
+| firstname   | varchar(20)  | NO   |     | null    |                |
+| lastname    | varchar(20)  | NO   |     | null    |                |
+| email       | varchar(255) | YES  | UNI | null    |                |
+| phonenumber | varchar(15)  | YES  | UNI | null    |                |
+| address     | varchar(50)  | YES  |     | null    |                |
++-------------+--------------+------+-----+---------+----------------+
+6 rows in set (0.01 sec)
+mysql-sql> describe loans;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| customerid      | int(11)       | NO   | PRI | null    |       |
+| loanid          | int(11)       | YES  |     | null    |       |
+| balance         | decimal(15,2) | NO   |     | null    |       |
+| loantype        | varchar(20)   | NO   |     | null    |       |
+| interestrate    | decimal(5,2)  | NO   |     | null    |       |
+| previouspayment | decimal(15,2) | YES  |     | null    |       |
+| nextpayment     | decimal(15,2) | YES  |     | null    |       |
+| nextpaymentdate | varchar(30)   | NO   |     | null    |       |
++-----------------+---------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+mysql-sql> alter table loans add unique(loanid);
+Query OK, 0 rows affected (0.30 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+mysql-sql> describe loans;
++-----------------+---------------+------+-----+---------+-------+
+| Field           | Type          | Null | Key | Default | Extra |
++-----------------+---------------+------+-----+---------+-------+
+| customerid      | int(11)       | NO   | PRI | null    |       |
+| loanid          | int(11)       | YES  | UNI | null    |       |
+| balance         | decimal(15,2) | NO   |     | null    |       |
+| loantype        | varchar(20)   | NO   |     | null    |       |
+| interestrate    | decimal(5,2)  | NO   |     | null    |       |
+| previouspayment | decimal(15,2) | YES  |     | null    |       |
+| nextpayment     | decimal(15,2) | YES  |     | null    |       |
+| nextpaymentdate | varchar(30)   | NO   |     | null    |       |
++-----------------+---------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+mysql-sql> select * from customers;
++------------+-----------+------------+------------------------+-------------+-----------------------------------+
+| customerid | firstname | lastname   | email                  | phonenumber | address                           |
++------------+-----------+------------+------------------------+-------------+-----------------------------------+
+|          1 | Zachery   | Nyman      | Zachery.nyman@du.edu   | 5132121915  | 2581 S High St Denver, CO 80210   |
+|          2 | Courtney  | Owen       | Courtney.owen@du.edu   | 1234567890  | 2581 S High St Denver, CO 80210   |
+|          3 | Tom       | Marks      | Tom.marks@du.edu       | 1234567891  | 8923 N Main St Denver, CO 80210   |
+|          4 | Drew      | Harrilchak | Drew.Harrilchak@du.edu | 1234567892  | 8944 W Jewell St Denver, CO 80210 |
+|          5 | Brian     | Norris     | Brian.Norris@du.edu    | 1234567893  | 4251 W Iliff St Denver, CO 80210  |
++------------+-----------+------------+------------------------+-------------+-----------------------------------+
+5 rows in set (0.03 sec)
